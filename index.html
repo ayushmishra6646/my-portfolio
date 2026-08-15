@@ -230,7 +230,6 @@
           <p>📧 <strong>Email:</strong> ayushmishra6646@gmail.com</p>
           <p>📍 <strong>Location:</strong> Odisha Bhubaneswar</p>
           <p>🌐 <strong>Website:</strong> myportfolio.com</p>
-
         </div>
       </div>
     </section>
@@ -263,8 +262,8 @@
   </main>
 
   <script>
-    // Paste your Google Apps Script Web App URL between the quotes once ready
-    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzZ4AiQxtBBGq8o1hgz1Hf3lZlfnq4-RJ48G3Ok6zn7McxCV5EgfKyM5z_k2JbbmDYxw/exec"; 
+    // Updated Web App Deployment URL
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMNJXVUglIcHYNve6nwWGo-vE01hUTmckWuHKMgH6IEScEot9-6X-klsyZFgyaJJ6pxA/exec"; 
 
     // Theme Switcher Logic
     function toggleTheme() {
@@ -333,35 +332,52 @@
       document.getElementById('adminPassword').value = '';
     }
 
-    // Response Data Retrieval
+    // Response Data Retrieval (JSONP Fix for CORS)
     async function fetchResponses() {
       const container = document.getElementById('responsesContainer');
-      let data = [];
-
+      
       if (APPS_SCRIPT_URL) {
-        try {
-          const res = await fetch(APPS_SCRIPT_URL);
-          data = await res.json();
-        } catch (err) {
+        // Purana Dynamic Script Tag Remove Karein
+        const oldScript = document.getElementById('jsonpScript');
+        if (oldScript) oldScript.remove();
+
+        // Data processing Callback function definition
+        window.handleJsonResponse = function(data) {
+          if (!data || data.length === 0) {
+            container.innerHTML = "<p>No responses received yet.</p>";
+            return;
+          }
+          container.innerHTML = data.reverse().map(item => `
+            <div class="response-item">
+              <p><strong style="color: #ec4899;">${escapeHtml(item.name)}</strong> (${escapeHtml(item.email)})</p>
+              <p style="margin-top: 0.2rem;">${escapeHtml(item.message)}</p>
+              <span class="timestamp">${escapeHtml(item.timestamp)}</span>
+            </div>
+          `).join('');
+        };
+
+        // Inject Dynamic Script Tag
+        const script = document.createElement('script');
+        script.id = 'jsonpScript';
+        script.src = `${APPS_SCRIPT_URL}?callback=handleJsonResponse`;
+        script.onerror = () => {
           container.innerHTML = "<p style='color: #ef4444;'>Failed to retrieve data.</p>";
+        };
+        document.body.appendChild(script);
+      } else {
+        const data = JSON.parse(localStorage.getItem('portfolio_responses') || '[]');
+        if (data.length === 0) {
+          container.innerHTML = "<p>No responses received yet.</p>";
           return;
         }
-      } else {
-        data = JSON.parse(localStorage.getItem('portfolio_responses') || '[]');
+        container.innerHTML = data.reverse().map(item => `
+          <div class="response-item">
+            <p><strong style="color: #ec4899;">${escapeHtml(item.name)}</strong> (${escapeHtml(item.email)})</p>
+            <p style="margin-top: 0.2rem;">${escapeHtml(item.message)}</p>
+            <span class="timestamp">${escapeHtml(item.timestamp)}</span>
+          </div>
+        `).join('');
       }
-
-      if (data.length === 0) {
-        container.innerHTML = "<p>No responses received yet.</p>";
-        return;
-      }
-
-      container.innerHTML = data.reverse().map(item => `
-        <div class="response-item">
-          <p><strong style="color: #ec4899;">${escapeHtml(item.name)}</strong> (${escapeHtml(item.email)})</p>
-          <p style="margin-top: 0.2rem;">${escapeHtml(item.message)}</p>
-          <span class="timestamp">${escapeHtml(item.timestamp)}</span>
-        </div>
-      `).join('');
     }
 
     function escapeHtml(str) {
