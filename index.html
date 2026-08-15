@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Developer Portfolio & Resume</title>
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --text-color: #f0f6fc;
+      --card-bg: rgba(22, 27, 34, 0.65);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --primary: #ec4899;
+      --primary-gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #3b82f6 100%);
+      --button-gradient: linear-gradient(135deg, #ff7e5f, #feb47b);
+      --input-bg: rgba(255, 255, 255, 0.07);
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f8fafc;
+      --text-color: #0f172a;
+      --card-bg: rgba(255, 255, 255, 0.7);
+      --card-border: rgba(0, 0, 0, 0.08);
+      --primary: #8b5cf6;
+      --input-bg: rgba(0, 0, 0, 0.04);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.3s; scroll-behavior: smooth; }
+    
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      background: var(--bg-color); 
+      color: var(--text-color); 
+      line-height: 1.6; 
+      padding-top: 80px; 
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Vibrant Glowing Background Shapes */
+    .aurora-bg {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.5;
+      animation: floatAnimation 12s infinite alternate ease-in-out;
+    }
+    .shape-1 { width: 500px; height: 500px; background: #8b5cf6; top: -100px; left: -100px; }
+    .shape-2 { width: 450px; height: 450px; background: #ec4899; bottom: 10%; right: -50px; animation-delay: -4s; }
+    .shape-3 { width: 400px; height: 400px; background: #06b6d4; top: 40%; left: 30%; animation-delay: -8s; }
+    .shape-4 { width: 300px; height: 300px; background: #f97316; bottom: -50px; left: 10%; animation-delay: -2s; }
+
+    @keyframes floatAnimation {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      100% { transform: translate(60px, 40px) scale(1.15) rotate(20deg); }
+    }
+
+    /* Navigation Bar */
+    nav { 
+      position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+      width: 90%; max-width: 1000px; height: 60px; 
+      background: rgba(15, 23, 42, 0.65); 
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border); 
+      border-radius: 40px;
+      display: flex; align-items: center; justify-content: space-between; 
+      padding: 0 1.5rem; z-index: 1000; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    nav .logo { font-size: 1.1rem; font-weight: 800; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    nav ul { display: flex; list-style: none; gap: 1.5rem; align-items: center; }
+    nav a { color: var(--text-color); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    nav a:hover { opacity: 0.8; }
+    .theme-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--card-border); color: var(--text-color); padding: 0.4rem 0.8rem; border-radius: 20px; cursor: pointer; }
+
+    /* Frosted Glass Container Sections */
+    section { 
+      max-width: 950px; margin: 2rem auto; padding: 3rem 2.5rem; 
+      background: var(--card-bg); 
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border); 
+      border-radius: 24px; 
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+
+    /* Hero Profile Layout */
+    .hero-container { display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+    .hero-text { flex: 1; min-width: 280px; }
+    .hero-avatar {
+      width: 130px; height: 130px; border-radius: 50%;
+      background: linear-gradient(135deg, #06b6d4, #ec4899);
+      padding: 4px; display: flex; align-items: center; justify-content: center;
+    }
+    .hero-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+    /* Grid Layouts for Resume Cards */
+    .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-top: 1rem; }
+    .card { 
+      background: rgba(255, 255, 255, 0.04); 
+      padding: 1.5rem; border-radius: 16px; 
+      border: 1px solid var(--card-border); 
+    }
+    .card h3 { color: #38bdf8; margin-bottom: 0.5rem; font-size: 1.1rem; }
+
+    /* Forms & Inputs */
+    .contact-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    form { display: flex; flex-direction: column; gap: 1rem; }
+    input, textarea { 
+      width: 100%; padding: 0.9rem 1.2rem; 
+      border-radius: 12px; border: 1px solid var(--card-border); 
+      background: var(--input-bg); color: var(--text-color); 
+      outline: none; font-size: 0.95rem;
+    }
+    input:focus, textarea:focus { border-color: #ec4899; box-shadow: 0 0 10px rgba(236, 72, 153, 0.3); }
+
+    /* Gradient Buttons */
+    .gradient-btn { 
+      background: var(--button-gradient); 
+      color: white; padding: 0.9rem; border: none; 
+      border-radius: 12px; font-weight: bold; cursor: pointer; 
+      font-size: 1rem; box-shadow: 0 4px 15px rgba(255, 126, 95, 0.4);
+    }
+    .gradient-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* Admin View Toggles */
+    .hidden { display: none !important; }
+    .response-item { border-bottom: 1px solid var(--card-border); padding: 1rem 0; }
+    .response-item:last-child { border-bottom: none; }
+    .timestamp { font-size: 0.75rem; opacity: 0.6; display: block; margin-top: 0.3rem; }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Glowing Shapes -->
+  <div class="aurora-bg">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">MY PORTFOLIO</div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#resume">Resume</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#admin">Admin</a></li>
+      <li><button class="theme-btn" onclick="toggleTheme()">☀️ / 🌙</button></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- About Section -->
+    <section id="about">
+      <div class="hero-container">
+        <div class="hero-text">
+          <h1>HELLO, I'M <br/><span class="gradient-text">AYUSH</span></h1>
+          <p style="margin-top: 1rem; color: #94a3b8;">
+            Passionate full-stack developer dedicated to building sleek, highly functional visual web applications with modern tech stacks.
+          </p>
+        </div>
+        <div class="hero-avatar">
+          <img src="profile.jpg.jpeg" alt="Profile Avatar" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Resume Section -->
+    <section id="resume">
+      <h2>RESUME</h2>
+      <div class="grid-container">
+        <div class="card">
+          <h3>Experience</h3>
+          <p><strong>Frontend Engineer</strong></p>
+          <p style="font-size: 0.85rem; color: #94a3b8;">Tech Corp (2024 - Present)</p>
+          <p style="font-size: 0.9rem; margin-top: 0.5rem;">Built interactive UI frameworks and glassmorphic user experience designs.</p>
+        </div>
+        <div class="card">
+          <h3>Education</h3>
+          <p><strong>B.Tech Computer Science</strong></p>
+          <p style="font-size: 0.85rem; color: #94a3b8;">Gandhi Engineering College(2024 - 2028)</p>
+          <p style="font-size: 0.9rem; margin-top: 0.5rem;">Focused on Data Structures, Algorithms, and Web Development.</p>
+        </div>
+        <div class="card">
+          <h3>Projects</h3>
+          <p><strong>Portfolio Suite</strong></p>
+          <p style="font-size: 0.9rem; margin-top: 0.5rem;">Integrated Google Apps Script datastore & dynamic theme switcher.</p>
+        </div>
+        <div class="card">
+          <h3>Skills</h3>
+          <p style="font-size: 0.9rem;">JavaScript (ES6+), HTML5, CSS3, REST APIs, Google Apps Script, Git</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Me Section -->
+    <section id="contact">
+      <h2>CONTACT ME</h2>
+      <div class="contact-wrapper">
+        <form id="contactForm" onsubmit="handleContactSubmit(event)">
+          <input type="text" id="name" placeholder="Your Name" required />
+          <input type="email" id="email" placeholder="Your Email" required />
+          <textarea id="message" rows="4" placeholder="Your Message" required></textarea>
+          <button type="submit" class="gradient-btn">SEND MESSAGE</button>
+          <p id="formStatus" style="display: none; font-size: 0.9rem; margin-top: 0.5rem;"></p>
+        </form>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: center; gap: 1rem;">
+          <h3 style="color: #ec4899;">Contact Details</h3>
+          <p>📞 <strong>Phone:</strong> +91 6370265664</p>
+          <p>📧 <strong>Email:</strong> ayushmishra6646@gmail.com</p>
+          <p>📍 <strong>Location:</strong> Odisha Bhubaneswar</p>
+          <p>🌐 <strong>Website:</strong> myportfolio.com</p>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin Section -->
+    <section id="admin">
+      <h2>ADMIN DASHBOARD</h2>
+      
+      <!-- Login Box -->
+      <div id="adminLoginCard" class="card">
+        <h3 style="margin-bottom: 1rem;">Login to View Responses</h3>
+        <form onsubmit="handleAdminLogin(event)">
+          <input type="password" id="adminPassword" placeholder="Enter Admin Password (admin123)" required />
+          <button type="submit" class="gradient-btn">LOGIN</button>
+        </form>
+        <p id="loginError" style="color: #ef4444; margin-top: 0.5rem; display: none;">Invalid Password!</p>
+      </div>
+
+      <!-- Dashboard Box (Initially Hidden) -->
+      <div id="adminDashboardCard" class="card hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3>User Responses</h3>
+          <button onclick="handleAdminLogout()" class="theme-btn">Logout</button>
+        </div>
+        <div id="responsesContainer" style="margin-top: 1rem;">
+          <p>Loading responses...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Paste your Google Apps Script Web App URL between the quotes once ready
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzZ4AiQxtBBGq8o1hgz1Hf3lZlfnq4-RJ48G3Ok6zn7McxCV5EgfKyM5z_k2JbbmDYxw/exec"; 
+
+    // Theme Switcher Logic
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+    }
+
+    // Form Submission Handler
+    async function handleContactSubmit(e) {
+      e.preventDefault();
+      const status = document.getElementById('formStatus');
+      const payload = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        message: document.getElementById('message').value,
+        timestamp: new Date().toLocaleString()
+      };
+
+      status.style.display = 'block';
+      status.style.color = '#38bdf8';
+      status.innerText = "Sending...";
+
+      if (APPS_SCRIPT_URL) {
+        try {
+          await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          status.style.color = '#4ade80';
+          status.innerText = "Message sent successfully!";
+        } catch (err) {
+          status.style.color = '#ef4444';
+          status.innerText = "Error sending message.";
+        }
+      } else {
+        const existing = JSON.parse(localStorage.getItem('portfolio_responses') || '[]');
+        existing.push(payload);
+        localStorage.setItem('portfolio_responses', JSON.stringify(existing));
+        status.style.color = '#4ade80';
+        status.innerText = "Saved locally (Apps Script URL empty)!";
+      }
+
+      document.getElementById('contactForm').reset();
+    }
+
+    // Admin Panel Login/Logout
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const pwd = document.getElementById('adminPassword').value;
+      if (pwd === 'admin123') {
+        document.getElementById('adminLoginCard').classList.add('hidden');
+        document.getElementById('adminDashboardCard').classList.remove('hidden');
+        fetchResponses();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    function handleAdminLogout() {
+      document.getElementById('adminDashboardCard').classList.add('hidden');
+      document.getElementById('adminLoginCard').classList.remove('hidden');
+      document.getElementById('adminPassword').value = '';
+    }
+
+    // Response Data Retrieval
+    async function fetchResponses() {
+      const container = document.getElementById('responsesContainer');
+      let data = [];
+
+      if (APPS_SCRIPT_URL) {
+        try {
+          const res = await fetch(APPS_SCRIPT_URL);
+          data = await res.json();
+        } catch (err) {
+          container.innerHTML = "<p style='color: #ef4444;'>Failed to retrieve data.</p>";
+          return;
+        }
+      } else {
+        data = JSON.parse(localStorage.getItem('portfolio_responses') || '[]');
+      }
+
+      if (data.length === 0) {
+        container.innerHTML = "<p>No responses received yet.</p>";
+        return;
+      }
+
+      container.innerHTML = data.reverse().map(item => `
+        <div class="response-item">
+          <p><strong style="color: #ec4899;">${escapeHtml(item.name)}</strong> (${escapeHtml(item.email)})</p>
+          <p style="margin-top: 0.2rem;">${escapeHtml(item.message)}</p>
+          <span class="timestamp">${escapeHtml(item.timestamp)}</span>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+  </script>
+</body>
+</html>
